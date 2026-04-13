@@ -1,0 +1,229 @@
+# Federated Learning Configuration for Disease Outbreak Prediction
+
+# System Configuration
+system:
+  name: "Regional Disease Outbreak Prediction FL System"
+  version: "1.0.0"
+  log_level: "INFO"
+  random_seed: 42
+
+# Federated Learning Parameters
+federated_learning:
+  # Number of communication rounds
+  num_rounds: 100
+  
+  # Number of clients per round
+  clients_per_round: 10
+  
+  # Total number of clients
+  total_clients: 50
+  
+  # Local epochs per round
+  local_epochs: 5
+  
+  # Local batch size
+  batch_size: 32
+  
+  # Learning rate
+  learning_rate: 0.001
+  
+  # Aggregation strategy: "fedavg", "fedprox", "fednova", "scaffold"
+  aggregation_strategy: "fedavg"
+  
+  # Client sampling: "random", "weighted", "clustered"
+  client_sampling: "weighted"
+  
+  # Fraction of clients to select each round
+  fraction_clients: 0.2
+
+# Privacy Configuration
+privacy:
+  # Differential Privacy
+  differential_privacy:
+    enabled: true
+    epsilon: 1.0
+    delta: 1e-5
+    max_grad_norm: 1.0
+    noise_multiplier: 1.1
+  
+  # Secure Aggregation
+  secure_aggregation:
+    enabled: true
+    protocol: "smpc"  # Options: smpc, he, shamir
+    threshold: 0.5
+  
+  # Homomorphic Encryption (optional)
+  homomorphic_encryption:
+    enabled: false
+    key_size: 2048
+
+# Model Configuration
+model:
+  # Model type: "lstm", "cnn_lstm", "transformer", "gnn", "xgboost"
+  type: "cnn_lstm"
+  
+  # Input dimensions
+  sequence_length: 30
+  num_features: 15
+  num_regions: 100
+  
+  # LSTM parameters
+  lstm:
+    hidden_size: 128
+    num_layers: 2
+    dropout: 0.2
+    bidirectional: true
+  
+  # CNN parameters
+  cnn:
+    num_filters: [64, 128, 256]
+    kernel_sizes: [3, 5, 7]
+    pooling_size: 2
+  
+  # Transformer parameters
+  transformer:
+    d_model: 256
+    nhead: 8
+    num_encoder_layers: 4
+    dim_feedforward: 1024
+    dropout: 0.1
+  
+  # GNN parameters
+  gnn:
+    hidden_channels: 128
+    num_layers: 3
+    edge_types: 5
+
+# Data Configuration
+data:
+  # Data sources
+  sources:
+    - clinical
+    - demographic
+    - environmental
+    - mobility
+    - historical
+  
+  # Preprocessing
+  preprocessing:
+    normalize: true
+    fill_missing: "interpolation"
+    outlier_method: "iqr"
+    
+  # Feature engineering
+  features:
+    lag_features: [1, 3, 7, 14]
+    rolling_windows: [7, 14, 30]
+    include_seasonality: true
+    include_trend: true
+  
+  # Data split
+  split:
+    train_ratio: 0.7
+    val_ratio: 0.15
+    test_ratio: 0.15
+    temporal_split: true
+
+# Communication Configuration
+communication:
+  # Protocol: "grpc", "https", "websockets"
+  protocol: "grpc"
+  
+  # Server address
+  server_host: "0.0.0.0"
+  server_port: 8080
+  
+  # Compression
+  compression:
+    enabled: true
+    method: "quantization"  # Options: quantization, sparsification, sketching
+    bits: 8
+  
+  # Async settings
+  async_mode: false
+  staleness_tolerance: 5
+
+# Security Configuration
+security:
+  # Authentication
+  authentication:
+    enabled: true
+    method: "jwt"
+    token_expiry: 3600
+  
+  # Encryption
+  encryption:
+    enabled: true
+    tls_cert_path: "certs/server.crt"
+    tls_key_path: "certs/server.key"
+  
+  # Attack defenses
+  defenses:
+    poisoning_detection: true
+    anomaly_detection: true
+    gradient_clipping: true
+
+# Deployment Configuration
+deployment:
+  # Environment: "cloud", "edge", "hybrid"
+  environment: "hybrid"
+  
+  # Cloud settings
+  cloud:
+    provider: "aws"  # Options: aws, gcp, azure
+    region: "us-east-1"
+    auto_scaling: true
+  
+  # Edge settings
+  edge:
+    max_devices_per_region: 100
+    sync_interval: 300  # seconds
+  
+  # Model update frequency
+  model_update:
+    frequency: "daily"
+    scheduled_time: "02:00"
+
+# Monitoring & Alerting
+monitoring:
+  # Metrics to track
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1_score
+    - auc_roc
+    - mae
+    - rmse
+  
+  # Alerting
+  alerts:
+    outbreak_threshold: 0.7
+    performance_degradation: 0.1
+    communication_failure: true
+  
+  # Dashboard
+  dashboard:
+    enabled: true
+    refresh_interval: 60
+    port: 8501
+
+# Evaluation Configuration
+evaluation:
+  # Cross-validation
+  cross_validation:
+    enabled: true
+    k_folds: 5
+    stratified: true
+  
+  # Baseline comparison
+  baselines:
+    - centralized
+    - local_only
+    - naive_federated
+  
+  # Statistical tests
+  statistical_tests:
+    - t_test
+    - wilcoxon
+    - mcnemar
